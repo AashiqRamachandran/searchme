@@ -17,8 +17,8 @@ os.environ['LANGCHAIN_ENDPOINT'] = 'https://api.smith.langchain.com'
 os.environ['LANGCHAIN_API_KEY'] = 'ls__18b33c33a232426186a23e0a5a073b54'  # Use your actual LangChain API key.
 os.environ['LANGCHAIN_PROJECT'] = 'SearchMe'  # Your LangChain project name.
 
-API_KEY = "sk-aaa"  # Use your actual secondary API key if needed.
-
+API_KEY = "sk-aa"  # Use your actual secondary API key if needed.
+show_citations = False
 
 # ---- Function Definitions ---- #
 def initialize_app(api_key):
@@ -119,18 +119,19 @@ def format_response(results):
     Formats the response and citations for display.
     """
     full_response = results["answer"]
-    if "citations" in results and results["citations"]:
-        full_response += "\n\n**Sources**:\n"
-        sources = set()
-        for citation in results["citations"]:
-            source = citation[1]["url"]
-            pattern = re.compile(r"([^/]+)\.[^\.]+\.pdf$")
-            match = pattern.search(source)
-            if match:
-                source = match.group(1) + ".pdf"
-            sources.add(source)
-        for source in sources:
-            full_response += f"- {source}\n"
+    if show_citations:
+        if "citations" in results and results["citations"]:
+            full_response += "\n\n**Sources**:\n"
+            sources = set()
+            for citation in results["citations"]:
+                source = citation[1]["url"]
+                pattern = re.compile(r"([^/]+)\.[^\.]+\.pdf$")
+                match = pattern.search(source)
+                if match:
+                    source = match.group(1) + ".pdf"
+                sources.add(source)
+            for source in sources:
+                full_response += f"- {source}\n"
 
     return full_response
 
